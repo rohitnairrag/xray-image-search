@@ -32,11 +32,18 @@ def show_results(paths, scores):
     cols = st.columns(5)
     for i, (p, s) in enumerate(zip(paths, scores)):
         with cols[i % 5]:
-            if os.path.exists(p):
-                st.image(p, caption=f"{os.path.basename(p)}\nScore: {float(s):.3f}", use_container_width=True)
+            full_path = os.path.join(BASE_DIR, p)
+
+            if os.path.exists(full_path):
+                st.image(
+                    full_path,
+                    caption=f"{os.path.basename(p)}\nScore: {float(s):.3f}",
+                    use_container_width=True
+                )
             else:
                 st.warning(f"Missing: {p}")
 
+    
 
 if mode == "Text Search":
     query = st.text_input("Enter text query (e.g., 'chest xray', 'bone fracture', 'spine xray')")
