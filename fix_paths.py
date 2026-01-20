@@ -1,27 +1,22 @@
-import numpy as np
 import os
+import numpy as np
 
-paths = np.load("image_paths.npy", allow_pickle=True)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGES_DIR = os.path.join(BASE_DIR, "images")
 
-new_paths = []
+paths = []
 
-for p in paths:
-    fname = os.path.basename(p).lower()
+for root, dirs, files in os.walk(IMAGES_DIR):
+    for file in files:
+        if file.lower().endswith((".jpg", ".png", ".jpeg")):
+            full_path = os.path.join(root, file)
+            rel_path = os.path.relpath(full_path, BASE_DIR).replace("\\", "/")
+            paths.append(rel_path)
 
-    if "chest" in fname:
-        folder = "Chest"
-    elif "dental" in fname:
-        folder = "Dental"
-    elif "fracture" in fname:
-        folder = "Fracture"
-    elif "spine" in fname:
-        folder = "Spine"
-    else:
-        folder = "Chest"  # fallback
+paths = np.array(paths)
 
-    new_paths.append(os.path.join("images", folder, fname))
+np.save("image_paths.npy", paths)
 
-new_paths = np.array(new_paths, dtype=object)
-np.save("image_paths.npy", new_paths)
+print("Saved", len(paths), "paths")
+print(paths[:5])
 
-print("✅ image_paths.npy rebuilt for GitHub folder structure")
