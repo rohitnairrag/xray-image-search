@@ -22,7 +22,8 @@ image_paths = np.array([p.replace("\\", "/") for p in image_paths])
 
 # Load CLIP
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
+model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+model = model.to(device)
 processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 st.set_page_config(page_title="X-Ray Image Search", layout="wide")
