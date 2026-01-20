@@ -16,6 +16,8 @@ IMAGE_PATHS = os.path.join(BASE_DIR, "image_paths.npy")
 # Load embeddings
 image_embeddings = np.load(IMAGE_EMB)
 image_paths = np.load(IMAGE_PATHS, allow_pickle=True)
+image_paths = np.array([p.replace("\\", "/") for p in image_paths])
+
 
 
 # Load CLIP
@@ -30,6 +32,7 @@ mode = st.radio("Choose search mode:", ["Text Search", "Image Search"])
 
 def show_results(paths, scores):
     cols = st.columns(5)
+
     for i, (p, s) in enumerate(zip(paths, scores)):
         with cols[i % 5]:
             full_path = os.path.join(BASE_DIR, p)
@@ -41,7 +44,8 @@ def show_results(paths, scores):
                     use_container_width=True
                 )
             else:
-                st.warning(f"Missing: {p}")
+                st.error(f"Missing: {full_path}")
+
 
     
 
